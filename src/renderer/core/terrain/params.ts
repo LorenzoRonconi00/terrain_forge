@@ -1,5 +1,8 @@
+import type { NoiseType } from '../noise/types'
+
 export interface TerrainParams {
     seed: number
+    noiseType: NoiseType
     width: number
     height: number
     worldSize: number
@@ -17,6 +20,7 @@ export interface TerrainParams {
 
 export const DEFAULT_TERRAIN_PARAMS: TerrainParams = {
     seed: 1337,
+    noiseType: 'perlin',
     width: 256,
     height: 256,
     worldSize: 100,

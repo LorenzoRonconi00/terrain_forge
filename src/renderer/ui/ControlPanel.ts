@@ -41,6 +41,9 @@ export class ControlPanel {
         general.on('change', () => this.apply())
 
         const noise = this.pane.addFolder({ title: 'Noise' })
+        noise.addBinding(this.state, 'noiseType', {
+            options: { Perlin: 'perlin', Simplex: 'simplex' }
+        })
         noise.addBinding(this.state, 'scale', { min: 1, max: 200, step: 0.5 })
         noise.addBinding(this.state, 'octaves', { min: 1, max: 8, step: 1 })
         noise.addBinding(this.state, 'persistence', { min: 0, max: 1, step: 0.01 })

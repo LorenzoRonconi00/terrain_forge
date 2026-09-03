@@ -1,5 +1,5 @@
 import { Fbm } from '../noise/fbm'
-import { PerlinNoise2D } from '../noise/perlin'
+import { createNoise2D } from '../noise/createNoise'
 import { applyElevationCurve, clamp01 } from './elevationCurve'
 import type { TerrainParams } from './params'
 
@@ -16,7 +16,7 @@ export function generateHeightfield(params: TerrainParams): Heightfield {
     const height = Math.max(2, Math.floor(params.height))
     const scale = params.scale <= 0 ? 1 : params.scale
 
-    const source = new PerlinNoise2D(params.seed)
+    const source = createNoise2D(params.noiseType, params.seed)
     const fbm = new Fbm(source, {
         octaves: params.octaves,
         frequency: 1,

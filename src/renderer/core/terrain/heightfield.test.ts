@@ -78,4 +78,13 @@ describe('generateHeightfield', () => {
             expect(value * 6).toBeCloseTo(Math.round(value * 6), 6)
         }
     })
+    it('produces a different field for simplex noise, still within [0, 1]', () => {
+        const perlin = generateHeightfield(params({ noiseType: 'perlin' }))
+        const simplex = generateHeightfield(params({ noiseType: 'simplex' }))
+        expect(Array.from(perlin.data)).not.toEqual(Array.from(simplex.data))
+        for (const value of simplex.data) {
+            expect(value).toBeGreaterThanOrEqual(0)
+            expect(value).toBeLessThanOrEqual(1)
+        }
+    })
 })
