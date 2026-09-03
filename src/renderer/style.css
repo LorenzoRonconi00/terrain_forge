@@ -1,0 +1,33 @@
+:root {
+    color-scheme: dark;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #1a1a1f;
+}
+
+#viewport {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#panel {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: 300px;
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+}
