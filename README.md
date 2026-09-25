@@ -1,6 +1,6 @@
 # Terrain Forge
 
-A standalone desktop tool for generating procedural terrains and dungeons for games. Everything runs locally — no backend, no accounts, no external services. Clone it, run it, and start exporting maps you can drop straight into Unity or Godot.
+A standalone desktop tool for generating procedural terrains and dungeons for games. Everything runs locally: no backend, no accounts, no external services. Clone it, run it, and start exporting maps you can drop straight into Unity or Godot.
 
 ![Terrain preview](docs/screenshot-terrain.png)
 
@@ -57,23 +57,23 @@ worldY = minHeight + h * (maxHeight - minHeight)
 
 **Terrain OBJ** is already in world units, Y-up, with smooth normals.
 
-**Dungeon JSON** exposes `tiles[row * width + col]` (wall / floor / corridor / door — see `tileLegend`), `rooms`, `connections`, and the `start`/`end` room ids.
+**Dungeon JSON** exposes `tiles[row * width + col]` (wall / floor / corridor / door, see `tileLegend`), `rooms`, `connections`, and the `start`/`end` room ids.
 
 **Dungeon tilemap PNG** is one pixel per tile.
 
 **Dungeon OBJ** is one world unit per tile, walls extruded only where they border walkable space.
 
-**Dungeon Tiled export** produces a `.tmx` map plus a matching `dungeon-tileset.png` — save both in the same folder and open the map in Tiled, or import directly through Unity's or Godot's Tiled importers.
+**Dungeon Tiled export** produces a `.tmx` map plus a matching `dungeon-tileset.png`, save both in the same folder and open the map in Tiled, or import directly through Unity's or Godot's Tiled importers.
 
 ## Architecture
 
 ```
 src/
-  main/        Electron main process — window and file-save IPC handler
+  main/        Electron main process, window and file-save IPC handler
   preload/     contextBridge exposing window.api.saveFile
   shared/      IPC channel name and message types
   renderer/
-    core/      pure generation logic, no Three.js/DOM/Electron — fully unit-tested
+    core/      pure generation logic, no Three.js/DOM/Electron, fully unit-tested
       prng.ts, hash.ts
       noise/       Perlin, Simplex, FBM
       terrain/     params, elevation curve, heightfield, geometry, erosion
@@ -91,7 +91,7 @@ src/
 npm test
 ```
 
-Vitest covers the whole `core/` layer — noise properties, the heightfield and dungeon generation pipelines, and every exporter (PNG chunk/CRC structure, JSON schema, OBJ topology, TMX layout).
+Vitest covers the whole `core/` layer, noise properties, the heightfield and dungeon generation pipelines, and every exporter (PNG chunk/CRC structure, JSON schema, OBJ topology, TMX layout).
 
 ## License
 
