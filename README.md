@@ -23,7 +23,7 @@ A standalone desktop tool for generating procedural terrains and dungeons for ga
 
 ## Download
 
-Prebuilt Windows and Linux builds are available on the [Releases](https://github.com/LorenzoRonconi00/terrain-forge/releases) page, download and run, no build step required.
+Prebuilt Windows and Linux builds are available on the [Releases](https://github.com/LorenzoRonconi00/terrain_forge/releases) page — download and run, no build step required.
 
 ## Getting started
 

@@ -41,7 +41,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/LorenzoRonconi00/terrain-forge.git"
+        "url": "https://github.com/LorenzoRonconi00/terrain_forge.git"
     },
     "build": {
         "appId": "com.terrainforge.app",
