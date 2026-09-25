@@ -7,7 +7,7 @@ import { TerrainMesh } from './TerrainMesh'
 export class Viewer {
     readonly stats = { fps: 0 }
 
-    private readonly canvas: HTMLCanvasElement
+    readonly canvas: HTMLCanvasElement
     private readonly renderer: WebGLRenderer
     private readonly scene: Scene
     private readonly camera: PerspectiveCamera

@@ -87,4 +87,13 @@ describe('generateHeightfield', () => {
             expect(value).toBeLessThanOrEqual(1)
         }
     })
+    it('applies hydraulic erosion when enabled', () => {
+        const plain = generateHeightfield(params({ erosionEnabled: false }))
+        const eroded = generateHeightfield(params({ erosionEnabled: true, erosionDroplets: 5000 }))
+        expect(Array.from(plain.data)).not.toEqual(Array.from(eroded.data))
+        for (const value of eroded.data) {
+            expect(value).toBeGreaterThanOrEqual(0)
+            expect(value).toBeLessThanOrEqual(1)
+        }
+    })
 })

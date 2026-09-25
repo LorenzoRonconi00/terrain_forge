@@ -14,6 +14,9 @@ export interface TerrainParams {
     elevationExponent: number
     terraces: number
     seaLevel: number
+    erosionEnabled: boolean
+    erosionDroplets: number
+    erosionRadius: number
     offsetX: number
     offsetY: number
 }
@@ -32,6 +35,9 @@ export const DEFAULT_TERRAIN_PARAMS: TerrainParams = {
     elevationExponent: 2,
     terraces: 0,
     seaLevel: 0.32,
+    erosionEnabled: false,
+    erosionDroplets: 50000,
+    erosionRadius: 3,
     offsetX: 0,
     offsetY: 0
 }

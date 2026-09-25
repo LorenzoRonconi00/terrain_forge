@@ -1,28 +1,19 @@
-import { Viewer } from './three/Viewer'
-import { ControlPanel } from './ui/ControlPanel'
-import { TerrainStore } from './ui/store'
+import { AppShell } from './app/AppShell'
 
 function bootstrap(): void {
-    const canvas = document.querySelector<HTMLCanvasElement>('#viewport')
+    const terrainCanvas = document.querySelector<HTMLCanvasElement>('#viewport')
+    const dungeonCanvas = document.querySelector<HTMLCanvasElement>('#dungeon-viewport')
     const panelContainer = document.querySelector<HTMLElement>('#panel')
-    if (!canvas || !panelContainer) {
-        throw new Error('Required DOM nodes (#viewport, #panel) not found in index.html')
+    if (!terrainCanvas || !dungeonCanvas || !panelContainer) {
+        throw new Error(
+            'Required DOM nodes (#viewport, #dungeon-viewport, #panel) not found in index.html'
+        )
     }
 
-    const viewer = new Viewer(canvas)
-    const store = new TerrainStore()
-    const panel = new ControlPanel(store, viewer, panelContainer)
-
-    const unsubscribe = store.subscribe((params, field) => {
-        viewer.setTerrain(field, params.seaLevel)
-    })
+    const shell = new AppShell(terrainCanvas, dungeonCanvas, panelContainer)
 
     if (import.meta.hot) {
-        import.meta.hot.dispose(() => {
-            unsubscribe()
-            panel.dispose()
-            viewer.dispose()
-        })
+        import.meta.hot.dispose(() => shell.dispose())
     }
 }
 
