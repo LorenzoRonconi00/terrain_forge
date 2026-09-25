@@ -16,10 +16,8 @@
         "format": "prettier --write .",
         "test": "vitest run",
         "test:watch": "vitest",
-        "package:win": "electron-builder --win",
-        "package:linux": "electron-builder --linux",
-        "dist:win": "electron-builder --win --publish always",
-        "dist:linux": "electron-builder --linux --publish always"
+        "package:win": "electron-builder --win --publish never",
+        "package:linux": "electron-builder --linux --publish never"
     },
     "dependencies": {
         "three": "^0.170.0",
@@ -69,10 +67,6 @@
                 "AppImage"
             ],
             "category": "Utility"
-        },
-        "publish": {
-            "provider": "github",
-            "releaseType": "draft"
         }
     }
 }

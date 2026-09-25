@@ -20,9 +20,14 @@ jobs:
       - run: npm test
       - run: npm run typecheck
       - run: npm run build
-      - run: npm run dist:win
+      - run: npm run package:win
+      - name: Create draft release and upload Windows artifacts
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} --draft --title ${{ github.ref_name }} --notes "Terrain Forge ${{ github.ref_name }}"
+          gh release upload ${{ github.ref_name }} release/*.exe
 
   build-linux:
     needs: build-windows
@@ -36,9 +41,11 @@ jobs:
       - run: npm test
       - run: npm run typecheck
       - run: npm run build
-      - run: npm run dist:linux
+      - run: npm run package:linux
+      - name: Upload Linux artifact
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: gh release upload ${{ github.ref_name }} release/*.AppImage
 
   publish-release:
     needs: build-linux
