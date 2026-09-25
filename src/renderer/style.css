@@ -37,3 +37,7 @@ body,
     max-height: calc(100vh - 24px);
     overflow-y: auto;
 }
+
+#dungeon-viewport {
+    touch-action: none;
+}

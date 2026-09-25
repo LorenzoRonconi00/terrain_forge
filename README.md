@@ -1,19 +1,25 @@
 # Terrain Forge
 
-Procedural terrain generator for game developers. A standalone desktop app: live 3D preview, hand-written noise, and exports you can drop straight into Unity/UE/Godot. Fully offline — no backend, no database, no accounts.
+A standalone desktop tool for generating procedural terrains and dungeons for games. Everything runs locally — no backend, no accounts, no external services. Clone it, run it, and start exporting maps you can drop straight into Unity or Godot.
 
-![Terrain Forge](docs/screenshot.png)
+![Terrain preview](docs/screenshot-terrain.png)
 
 ## Features
 
+**Terrain**
 - Live Three.js preview with orbit controls
-- Perlin / fractal-Brownian-motion noise written from scratch (seeded, deterministic)
-- Adjustable parameters: seed, world size, resolution, scale, octaves, persistence, lacunarity, noise offset, height scale, elevation curve, terraces, sea level
+- Perlin and Simplex noise, hand-written, combined through fractal Brownian motion
+- Adjustable seed, resolution, scale, octaves, persistence, lacunarity, elevation curve, terraces, sea level
+- Optional droplet-based hydraulic erosion
 - Elevation-based colouring (water, sand, grass, rock, snow)
-- Exports:
-  - **Heightmap PNG** — 16-bit greyscale, range-normalised
-  - **Terrain JSON** — normalised heights + world-space metadata + full parameter set
-  - **Mesh OBJ** — ready-to-use mesh with smooth normals
+- Exports: 16-bit greyscale heightmap PNG, JSON (heights + parameters), OBJ mesh
+
+**Dungeon**
+- BSP-based room and corridor generator with extra loop connections
+- Live 2D top-down preview with pan and zoom
+- Exports: JSON (tiles, rooms, connections), 8-bit tilemap PNG, extruded mesh OBJ, Tiled TMX + tileset
+
+![Dungeon preview](docs/screenshot-dungeon.png)
 
 ## Getting started
 
@@ -34,41 +40,50 @@ npm start
 
 ## Export formats
 
-All three exports describe the same grid. World-space position of sample `(col, row)`:
+All exports for a given grid share the same coordinate system:
 
 ```
 worldX = (col / (width - 1) - 0.5) * worldSize
 worldZ = (row / (height - 1) - 0.5) * worldSize
 ```
 
-**Heightmap PNG** and **Terrain JSON** store normalised heights `h in [0, 1]` stretched to the used range. Absolute elevation:
+**Terrain heightmap PNG / JSON** store heights normalised to `[0, 1]` and stretched to the used range. Absolute elevation:
 
 ```
 worldY = minHeight + h * (maxHeight - minHeight)
 ```
 
-`minHeight` / `maxHeight` (world units) are in the JSON. In the PNG, `h = pixel / 65535`. In the JSON, `heights[row * width + col]`.
+`minHeight` / `maxHeight` (world units) are included in the JSON; in the PNG, `h = pixel / 65535`.
 
-**Mesh OBJ** is already in world units, Y-up, with smooth normals — import and use directly.
+**Terrain OBJ** is already in world units, Y-up, with smooth normals.
+
+**Dungeon JSON** exposes `tiles[row * width + col]` (wall / floor / corridor / door — see `tileLegend`), `rooms`, `connections`, and the `start`/`end` room ids.
+
+**Dungeon tilemap PNG** is one pixel per tile.
+
+**Dungeon OBJ** is one world unit per tile, walls extruded only where they border walkable space.
+
+**Dungeon Tiled export** produces a `.tmx` map plus a matching `dungeon-tileset.png` — save both in the same folder and open the map in Tiled, or import directly through Unity's or Godot's Tiled importers.
 
 ## Architecture
 
 ```
 src/
-  main/        Electron main process: window + file-save IPC handler
-  preload/     contextBridge: exposes window.api.saveFile
+  main/        Electron main process — window and file-save IPC handler
+  preload/     contextBridge exposing window.api.saveFile
   shared/      IPC channel name and message types
   renderer/
-    core/      pure engine — no Three.js, DOM or Electron; fully unit-tested
+    core/      pure generation logic, no Three.js/DOM/Electron — fully unit-tested
       prng.ts, hash.ts
-      noise/   perlin, fbm
-      terrain/ params, elevation curve, heightfield, geometry
-      export/  png encoder, json, obj, shared normalisation
-    three/     Viewer, TerrainMesh, lights
-    ui/        TerrainStore, ControlPanel, debounce
+      noise/       Perlin, Simplex, FBM
+      terrain/     params, elevation curve, heightfield, geometry, erosion
+      dungeon/     BSP, rooms, corridors, dungeon
+      export/      PNG/JSON/OBJ/TMX encoders
+    three/     Terrain viewer and mesh
+    canvas/    Dungeon 2D view
+    ui/        Stores and Tweakpane panels
+    app/       Shell wiring the two modules together
 ```
-
-The `core/` layer takes parameters and returns data (`Float32Array`, strings, objects). It has no rendering or platform dependencies, which keeps it testable and reusable.
 
 ## Testing
 
@@ -76,22 +91,7 @@ The `core/` layer takes parameters and returns data (`Float32Array`, strings, ob
 npm test
 ```
 
-Vitest covers the whole `core/` layer: PRNG determinism, noise range and continuity, FBM, the heightfield pipeline, and every exporter (PNG chunk/CRC structure, JSON schema, OBJ topology).
-
-## Roadmap
-
-- [x] Project scaffold
-- [x] Three.js viewer
-- [x] Hand-written Perlin noise + FBM
-- [x] Heightfield generation, adjustable resolution
-- [x] Terrain mesh with elevation-based colouring
-- [x] Live parameter panel
-- [x] Export: 16-bit greyscale PNG heightmap
-- [x] Export: JSON (heights + params)
-- [x] Export: OBJ mesh
-- [ ] Simplex noise option
-- [ ] Hydraulic erosion pass
-- [ ] Dungeon module (BSP, then WFC)
+Vitest covers the whole `core/` layer — noise properties, the heightfield and dungeon generation pipelines, and every exporter (PNG chunk/CRC structure, JSON schema, OBJ topology, TMX layout).
 
 ## License
 
